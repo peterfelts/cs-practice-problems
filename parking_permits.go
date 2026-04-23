@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -16,13 +17,13 @@ Your task is to identify any one parking space number that has been assigned mor
 
 func findDuplicatePermits(inArray []int) int {
 
-	permits := make(map[int]int)
+	permits := make(map[int]struct{})
 
 	for _, v := range inArray {
 		if _, ok := permits[v]; ok { // I was resetting 'v' with my first implementation: if v, ok := permits[v]
 			return v // if the key exists, we've found our first duplicate
 		} else {
-			permits[v] = 1
+			permits[v] = struct{}{}
 		}
 	}
 
@@ -79,23 +80,53 @@ func findDuplicatePermitsReadOnlyMemory(inArray []int) int {
 // inArray is read only, solution must be: O(n) time (and O(1) space)
 func findDuplicatePermitsOofNAndOofOneSpace(inArray []int) int {
 
-	// I was unable to figure this out unless we know that the array is given
-	// to us sorted. I would ask the interviewer this question.
+	// Because the problem specifies the following:
+	//   Array size N + 1
+	//   Array values 1-N
+	//   (N + 1 permits have been issued, but we only have N spaces)
+	// We are safe to assume/trust that there will never be a value in
+	// the array that is > N. This is important.
+	//
+	// In this version of the problem, we are constrained in that the array
+	// is read-only, and we must deliver a solution that is O(n) time and
+	// O(1) space.
+	//
+	// Again, our goal is to detect duplicates. One way to go about this
+	// is to treat the array values as a linked list, conceptually, and
+	// to try to detect a cycle. The conceptual linked list will be modeled
+	// as each array value being treated as a pointer to another index in the
+	// array. So, we're not directly detecting duplicate values, we're indirectly
+	// detecting them by the presence or lack of presence of duplicate indicies.
+	//
+	// We'll use Floyd's Tortise and Hare algorithm to detect a cycle. We'll use
+	// two pointers: one fast, one slow. They'll traverse the conceptual linked
+	// list. If the two meet, we've found a cycle and then we can determine
+	// the value of the duplicate.
 
-	// If I could count on inArray being sorted and starting at 1, I could walk the array
-	// and used the closed form k*(k+1)/2 on each step, keeping a manual sum.
-	// when the manual sume was greater than the closed form (k*(k+1)/2), I would have
-	// identified my first duplicate. On the other hand, this isn't much better than the
-	// implementation for #2
-	runningSum := 0
-	for i := 0; i < len(inArray); i++ {
-		runningSum += inArray[i]
-		k := i + 1
-		closedForm := k * (k + 1) / 2
-		if runningSum != closedForm {
-			return inArray[i]
+	// [3, 1, 3, 4, 2]
+	// what does this linked list look like?
+	// [0(3), 1(1), 2(3), 3(4), 4(2)]
+	// 3 -> 4 -> 2 -> 3 -> 4 -> 2 ...
+	slow, fast := 0, 0
+	for {
+
+		fmt.Printf("DEBUG:\n\tfast:%d\n\tinArray[%d]:%d\n\n", fast, fast, inArray[fast])
+
+		slow = inArray[slow]
+		fast = inArray[inArray[fast]]
+
+		// fmt.Printf("%d(%d)->", slow, inArray[slow])
+		// fmt.Printf("%d(%d)->", fast, inArray[fast])
+
+		// we've found our duplicate
+		if slow == fast {
+			fmt.Println()
+			fmt.Printf("slow,fast:%d,%d\n", slow, fast)
+			return inArray[slow]
 		}
-	}
 
-	return -1
+		// we would need to do an input sanitation check to
+		// confirm that the array size is N+1 because, otherwise
+		// this loop will be infinite.
+	}
 }
