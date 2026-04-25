@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -16,13 +17,13 @@ Your task is to identify any one parking space number that has been assigned mor
 
 func findDuplicatePermits(inArray []int) int {
 
-	permits := make(map[int]int)
+	permits := make(map[int]struct{})
 
 	for _, v := range inArray {
 		if _, ok := permits[v]; ok { // I was resetting 'v' with my first implementation: if v, ok := permits[v]
 			return v // if the key exists, we've found our first duplicate
 		} else {
-			permits[v] = 1
+			permits[v] = struct{}{}
 		}
 	}
 
@@ -33,7 +34,7 @@ func findDuplicatePermits(inArray []int) int {
 /*
 1 - Fix the solution above.
 2 - What if we do not have enough memory to create a copy of the input (can not be O(n) space).
-3 - Same as 2 but input is in rad-only memory (can not modify inArray).
+3 - Same as 2 but input is in read-only memory (can not modify inArray).
 4 - Finally, same as 2 and 3 but we must do it in O(n) time (and O(1) space).
 */
 
@@ -59,8 +60,8 @@ func findDuplicatePermitsConstantSpace(inArray []int) int {
 
 // #3
 // read-only memory.
-// This implementation will be comupte heavy as we are unable to
-// copy the input array and we are also constained in that we may not
+// This implementation will be compute heavy as we are unable to
+// copy the input array and we are also constrained in that we may not
 // modify the array
 func findDuplicatePermitsReadOnlyMemory(inArray []int) int {
 
@@ -77,25 +78,90 @@ func findDuplicatePermitsReadOnlyMemory(inArray []int) int {
 
 // #4
 // inArray is read only, solution must be: O(n) time (and O(1) space)
-func findDuplicatePermitsOofNAndOofOneSpace(inArray []int) int {
+func findDuplicatePermitsONAndO1Space(inArray []int) int {
 
-	// I was unable to figure this out unless we know that the array is given
-	// to us sorted. I would ask the interviewer this question.
-
-	// If I could count on inArray being sorted and starting at 1, I could walk the array
-	// and used the closed form k*(k+1)/2 on each step, keeping a manual sum.
-	// when the manual sume was greater than the closed form (k*(k+1)/2), I would have
-	// identified my first duplicate. On the other hand, this isn't much better than the
-	// implementation for #2
-	runningSum := 0
-	for i := 0; i < len(inArray); i++ {
-		runningSum += inArray[i]
-		k := i + 1
-		closedForm := k * (k + 1) / 2
-		if runningSum != closedForm {
-			return inArray[i]
-		}
+	if len(inArray) < 2 {
+		return -1
 	}
 
-	return -1
+	// Because the problem specifies the following:
+	//   Array size N + 1
+	//   Array values 1-N
+	//   (N + 1 permits have been issued, but we only have N spaces)
+	// We are safe to assume/trust that there will never be a value in
+	// the array that is > N. This is important.
+	//
+	// In this version of the problem, we are constrained in that the array
+	// is read-only, and we must deliver a solution that is O(n) time and
+	// O(1) space.
+	//
+	// Again, our goal is to detect duplicates. One way to go about this
+	// is to treat the array values as a linked list, conceptually, and
+	// to try to detect a cycle. The conceptual linked list will be modeled
+	// as each array value being treated as a pointer to another index in the
+	// array. So, we're not directly detecting duplicate values, we're indirectly
+	// detecting them by the presence or lack of presence of duplicate indices.
+	//
+	// We'll use Floyd's Tortoise and Hare algorithm to detect a cycle. We'll use
+	// two pointers: one fast, one slow. They'll traverse the conceptual linked
+	// list. If the two meet, we've found a cycle and then we can determine
+	// the value of the duplicate.
+
+	// [3, 1, 3, 4, 2]
+	// what does this linked list look like?
+	// [0(3), 1(1), 2(3), 3(4), 4(2)]
+	// 3 -> 4 -> 2 -> 3 -> 4 -> 2 ...
+	slow, fast := 0, 0
+
+	// - Let F be the number of steps from the start of the list to the entry point of the cycle.
+	//   The "entry point of the cycle" is the node where the cycle begins.
+	// - Let C be the length of the cycle itself.
+	// - Let D be the number of steps from the cycle entry point to the position where the slow
+	//   and fast pointers first meet inside the cycle.
+
+	for {
+
+		fmt.Printf("Phase 1:\n\tfast:%d\n\tinArray[%d]:%d\n\tinArray[%d]:%d\n", fast, fast, inArray[fast], inArray[fast], inArray[inArray[fast]])
+
+		slow = inArray[slow]
+		fast = inArray[inArray[fast]]
+
+		// we've determined that a cycle exists (not strictly necessary for this problem
+		// as we know that there is a duplicate value (i.e. a cycle), but finding this
+		// point is needed for the next step of Floyd's algorithm)
+		if slow == fast {
+
+			fmt.Println()
+			fmt.Printf("Phase 1 meeting point: %d\n", slow)
+			break
+		}
+
+		// we would need to do an input sanitation check to
+		// confirm that the array size is N+1 because, otherwise
+		// this loop will be infinite.
+	}
+
+	// When the fast and slow pointers meet inside the cycle, it turns out that the total
+	// distance the fast pointer traveled can be expressed as F + D plus some multiple of
+	// C (the cycle length). Without going into heavy algebra, one key result that emerges
+	// is this:
+	//
+	// F + D is a multiple of C.
+
+	// we'll reset the slow pointer, and keep the fast pointer where it is. Each will move
+	// one step at a time. They will meet at the start of the cycle
+	slow = 0
+	fmt.Printf("Phase 2:\n\tslow:%d\n\tfast:%d\n", slow, fast)
+	for {
+		fmt.Printf("Phase 2:\n\tfast:%d\n\tinArray[%d]:%d\n\tinArray[%d]:%d\n", fast, fast, inArray[fast], inArray[fast], inArray[inArray[fast]])
+
+		slow = inArray[slow]
+		fast = inArray[fast]
+
+		if slow == fast {
+			fmt.Printf("Phase 2: %d\n", slow)
+			// return inArray[slow]
+			return slow
+		}
+	}
 }
