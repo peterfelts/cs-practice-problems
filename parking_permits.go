@@ -34,7 +34,7 @@ func findDuplicatePermits(inArray []int) int {
 /*
 1 - Fix the solution above.
 2 - What if we do not have enough memory to create a copy of the input (can not be O(n) space).
-3 - Same as 2 but input is in rad-only memory (can not modify inArray).
+3 - Same as 2 but input is in read-only memory (can not modify inArray).
 4 - Finally, same as 2 and 3 but we must do it in O(n) time (and O(1) space).
 */
 
@@ -60,8 +60,8 @@ func findDuplicatePermitsConstantSpace(inArray []int) int {
 
 // #3
 // read-only memory.
-// This implementation will be comupte heavy as we are unable to
-// copy the input array and we are also constained in that we may not
+// This implementation will be compute heavy as we are unable to
+// copy the input array and we are also constrained in that we may not
 // modify the array
 func findDuplicatePermitsReadOnlyMemory(inArray []int) int {
 
@@ -78,7 +78,11 @@ func findDuplicatePermitsReadOnlyMemory(inArray []int) int {
 
 // #4
 // inArray is read only, solution must be: O(n) time (and O(1) space)
-func findDuplicatePermitsOofNAndOofOneSpace(inArray []int) int {
+func findDuplicatePermitsONAndO1Space(inArray []int) int {
+
+	if len(inArray) < 2 {
+		return -1
+	}
 
 	// Because the problem specifies the following:
 	//   Array size N + 1
@@ -96,9 +100,9 @@ func findDuplicatePermitsOofNAndOofOneSpace(inArray []int) int {
 	// to try to detect a cycle. The conceptual linked list will be modeled
 	// as each array value being treated as a pointer to another index in the
 	// array. So, we're not directly detecting duplicate values, we're indirectly
-	// detecting them by the presence or lack of presence of duplicate indicies.
+	// detecting them by the presence or lack of presence of duplicate indices.
 	//
-	// We'll use Floyd's Tortise and Hare algorithm to detect a cycle. We'll use
+	// We'll use Floyd's Tortoise and Hare algorithm to detect a cycle. We'll use
 	// two pointers: one fast, one slow. They'll traverse the conceptual linked
 	// list. If the two meet, we've found a cycle and then we can determine
 	// the value of the duplicate.
@@ -108,25 +112,56 @@ func findDuplicatePermitsOofNAndOofOneSpace(inArray []int) int {
 	// [0(3), 1(1), 2(3), 3(4), 4(2)]
 	// 3 -> 4 -> 2 -> 3 -> 4 -> 2 ...
 	slow, fast := 0, 0
+
+	// - Let F be the number of steps from the start of the list to the entry point of the cycle.
+	//   The "entry point of the cycle" is the node where the cycle begins.
+	// - Let C be the length of the cycle itself.
+	// - Let D be the number of steps from the cycle entry point to the position where the slow
+	//   and fast pointers first meet inside the cycle.
+
 	for {
 
-		fmt.Printf("DEBUG:\n\tfast:%d\n\tinArray[%d]:%d\n\n", fast, fast, inArray[fast])
+		fmt.Printf("Phase 1:\n\tfast:%d\n\tinArray[%d]:%d\n\tinArray[%d]:%d\n", fast, fast, inArray[fast], inArray[fast], inArray[inArray[fast]])
 
 		slow = inArray[slow]
 		fast = inArray[inArray[fast]]
 
-		// fmt.Printf("%d(%d)->", slow, inArray[slow])
-		// fmt.Printf("%d(%d)->", fast, inArray[fast])
-
-		// we've found our duplicate
+		// we've determined that a cycle exists (not strictly necessary for this problem
+		// as we know that there is a duplicate value (i.e. a cycle), but finding this
+		// point is needed for the next step of Floyd's algorithm)
 		if slow == fast {
+
 			fmt.Println()
-			fmt.Printf("slow,fast:%d,%d\n", slow, fast)
-			return inArray[slow]
+			fmt.Printf("Phase 1 meeting point: %d\n", slow)
+			break
 		}
 
 		// we would need to do an input sanitation check to
 		// confirm that the array size is N+1 because, otherwise
 		// this loop will be infinite.
+	}
+
+	// When the fast and slow pointers meet inside the cycle, it turns out that the total
+	// distance the fast pointer traveled can be expressed as F + D plus some multiple of
+	// C (the cycle length). Without going into heavy algebra, one key result that emerges
+	// is this:
+	//
+	// F + D is a multiple of C.
+
+	// we'll reset the slow pointer, and keep the fast pointer where it is. Each will move
+	// one step at a time. They will meet at the start of the cycle
+	slow = 0
+	fmt.Printf("Phase 2:\n\tslow:%d\n\tfast:%d\n", slow, fast)
+	for {
+		fmt.Printf("Phase 2:\n\tfast:%d\n\tinArray[%d]:%d\n\tinArray[%d]:%d\n", fast, fast, inArray[fast], inArray[fast], inArray[inArray[fast]])
+
+		slow = inArray[slow]
+		fast = inArray[fast]
+
+		if slow == fast {
+			fmt.Printf("Phase 2: %d\n", slow)
+			// return inArray[slow]
+			return slow
+		}
 	}
 }

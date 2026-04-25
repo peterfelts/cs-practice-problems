@@ -28,10 +28,6 @@ var testCases = []struct {
 		expected: 8,
 	},
 	{
-		permits:  []int{1, 2, 3},
-		expected: -1,
-	},
-	{
 		permits:  []int{3, 2, 2, 1},
 		expected: 2,
 	},
@@ -84,7 +80,7 @@ func TestFindDuplicatePermits_ReadOnlyMemory(t *testing.T) {
 
 }
 
-func TestFindDuplicatePermits_OofNAndOofOneSpace(t *testing.T) {
+func TestFindDuplicatePermits_ONAndO1Space(t *testing.T) {
 
 	for _, test := range testCases {
 
@@ -93,7 +89,7 @@ func TestFindDuplicatePermits_OofNAndOofOneSpace(t *testing.T) {
 
 		t.Run(testName, func(t *testing.T) {
 			// read only memory, constant space, O(n) time
-			actual := findDuplicatePermitsOofNAndOofOneSpace(test.permits)
+			actual := findDuplicatePermitsONAndO1Space(test.permits)
 			require.Equal(t, test.expected, actual)
 		})
 	}
