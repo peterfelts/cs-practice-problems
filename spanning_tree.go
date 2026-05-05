@@ -52,7 +52,7 @@ import (
 const UNVISITED int = 0
 const VISITED int = 1
 
-func main() {
+func spanningTree() {
 
 	graph := [][]int{
 		{1},
