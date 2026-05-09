@@ -71,7 +71,7 @@ func MinNumberOfCoinsForChange(n int, denoms []int) int {
 					prevCoinCount = MAX_UINT
 				}
 
-				coinCounts[amount] = min(coinCounts[amount], prevCoinCount)
+				coinCounts[amount] = minUint(coinCounts[amount], prevCoinCount)
 			}
 		}
 	}
@@ -83,7 +83,7 @@ func MinNumberOfCoinsForChange(n int, denoms []int) int {
 	return (int)(coinCounts[n])
 }
 
-func min(a, b uint) uint {
+func minUint(a, b uint) uint {
 	if a < b {
 		return a
 	}
