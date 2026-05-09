@@ -88,7 +88,7 @@ func jumpWithMemorization(speed, i int, path []int) bool {
 	indexIncrease := i + speed + 1
 
 	// decrease || constant || increase
-	return jump(speed-1, indexDecrease, path) || jump(speed, i+speed, path) || jump(speed+1, indexIncrease, path)
+	return jumpWithMemorization(speed-1, indexDecrease, path) || jumpWithMemorization(speed, i+speed, path) || jumpWithMemorization(speed+1, indexIncrease, path)
 
 }
 
