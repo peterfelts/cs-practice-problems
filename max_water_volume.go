@@ -59,28 +59,33 @@ func maxWaterVolumeDP(heights []int) int {
 	}
 
 	maxWaterVolume := 0
-	maxL, maxR := heights[0], heights[0] // the maxium height to the left and reight of each index
+	maxL := heights[0]
+
+	// create an array that stores the maxR values
+	// at each index (i.e. if I'm at inxdex i, what is my maxR?)
+	maxR := make([]int, len(heights))
+	maxR[len(heights)-1] = heights[len(heights)-1]
+
+	// populate this array, from right to left
+	for i := len(heights) - 2; i >= 0; i-- {
+		if heights[i] > maxR[i+1] {
+			maxR[i] = heights[i]
+		} else {
+			maxR[i] = maxR[i+1]
+		}
+
+	}
 
 	for i := 0; i < len(heights)-1; i++ {
 
-		// look left
+		// only update maxL when we find a higher value
 		if heights[i] > maxL {
 			maxL = heights[i]
 		}
-		// Find a new maxR once we've
-		// progressed to and reached the current maxR
-		if heights[i] == maxR {
-			maxR = 0
-			for k := i + 1; k < len(heights); k++ {
-				if heights[k] > maxR {
-					maxR = heights[k]
-				}
-			}
-		}
 
-		volume := min(maxL, maxR) - heights[i]
+		volume := min(maxL, maxR[i]) - heights[i]
 		if volume > 0 {
-			maxWaterVolume += min(maxL, maxR) - heights[i]
+			maxWaterVolume += min(maxL, maxR[i]) - heights[i]
 		}
 	}
 
