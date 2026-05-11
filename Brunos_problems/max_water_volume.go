@@ -1,4 +1,4 @@
-package main
+package bruno
 
 // Given an array of non-negative integers height representing an elevation map,
 // compute how much water it can trap after raining.

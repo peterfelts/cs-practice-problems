@@ -1,6 +1,4 @@
-// To execute Go code, please declare a func main() in a package "main"
-
-package main
+package bruno
 
 // Lunar Jetpack
 // An engineer is traversing the moon's surface from one lunar office to another using a jetpack to control their

@@ -1,6 +1,4 @@
-// To execute Go code, please declare a func main() in a package "main"
-
-package main
+package bruno
 
 import (
 	"fmt"

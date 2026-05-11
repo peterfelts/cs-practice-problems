@@ -1,8 +1,4 @@
-package main
-
-import (
-	"fmt"
-)
+package bruno
 
 func validParenthesis(s string) bool {
 
@@ -23,8 +19,6 @@ func validParenthesis(s string) bool {
 	stack := []rune{}
 
 	for _, v := range s {
-
-		fmt.Println(stack)
 
 		// pop
 		if v == ']' || v == '}' || v == ')' {

@@ -1,4 +1,4 @@
-package main
+package bruno
 
 // Problem: Given a string s, find the first non-repeating character in it and return its index.
 // If it does not exist, return -1.
