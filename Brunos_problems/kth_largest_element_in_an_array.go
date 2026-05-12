@@ -61,9 +61,9 @@ func returnKthLargestHeap(values []int, k int) int {
 
 func returnKthLargestQuickSelect(values []int, k int) int {
 
-	// quick sort returns the k-th LOWEST value,
+	// Quick Select finds the k-th LOWEST value by default,
 	// but we're looking for the k-th LARGEST value,
-	// so we'll adjust k
+	// so we adjust k accordingly.
 	k = len(values) - k
 	return quickSelect(values, 0, len(values)-1, k)
 }
@@ -108,9 +108,8 @@ func quickSelect(array []int, left, right, k int) int {
 	randomPivotIndex := left + rand.Intn(right-left)
 	fmt.Printf("left: %d, right: %d, randomPivotIndex: %d\n", left, right, randomPivotIndex)
 
-	// Do a first-pass partitioning over the entire array. This will return
-	// the index in the array where the pivot that we passed it lives, in
-	// order
+	// Partition the current subarray. This returns the index where
+	// the pivot now lives in its correct sorted position.
 	newPivot := quickSelectPartition(array, left, right, randomPivotIndex)
 
 	// with this new pivot, determine if we've found what we're looking for (k),
@@ -118,9 +117,7 @@ func quickSelect(array []int, left, right, k int) int {
 	if newPivot == k {
 		return array[k]
 	} else if newPivot > k {
-		// look left (this means that the new index that was returned from the
-		// previous partitioning is greater than what we're looking for, so
-		// we need to look left)
+		// look left — the pivot landed to the right of k, so k is in the left subarray
 		return quickSelect(array, left, newPivot-1, k)
 	}
 	// look right
@@ -128,7 +125,7 @@ func quickSelect(array []int, left, right, k int) int {
 }
 
 func quickSelectPartition(array []int, left, right, pivotIndex int) int {
-	// Get the value at the pivot
+	// get the value at the pivot index
 	pivotValue := array[pivotIndex]
 
 	// keep track of the index that we're considering
