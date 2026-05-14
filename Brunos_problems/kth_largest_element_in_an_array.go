@@ -36,27 +36,23 @@ func returnKthLargestBruteForce(values []int, kth int) int {
 
 func returnKthLargestHeap(values []int, k int) int {
 
-	h := &MaxHeap{}
+	h := &MinHeap{}
 	heap.Init(h)
 
 	// iterate through the input array and add all items to the heap
 	for i := 0; i < len(values); i++ {
 		heap.Push(h, values[i])
-	}
 
-	fmt.Println(h)
-
-	// As we are told that k will always be in bounds, we simply
-	// pop k elements off of the heap and return the kth
-	for j := 1; j <= k; j++ {
-		max := heap.Pop(h)
-		fmt.Println(max)
-		if j == k {
-			return max.(int)
+		// keep the lenght of the underlying
+		// slice to a set max, so that we'll
+		// always have the k-th largest item
+		// at the front
+		if len(*h) > k {
+			heap.Pop(h)
 		}
 	}
 
-	return 0
+	return (*h)[0]
 }
 
 func returnKthLargestQuickSelect(values []int, k int) int {
