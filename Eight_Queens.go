@@ -26,7 +26,7 @@ func eightQueens() [][]int {
 	positions := []int{} // the index will be the row, the value will be the column
 	allSolutions := [][]int{}
 
-	positions, allSolutions = populate(0, positions, allSolutions)
+	allSolutions = populate(0, positions, allSolutions)
 
 	for i, solution := range allSolutions {
 		fmt.Printf("Found %d solutions. Solution #%d\n", len(allSolutions), i+1)
@@ -37,7 +37,7 @@ func eightQueens() [][]int {
 	return allSolutions
 }
 
-func populate(row int, positions []int, allSolutions [][]int) ([]int, [][]int) {
+func populate(row int, positions []int, allSolutions [][]int) [][]int {
 
 	// we've reached the end of the board
 	if row == EIGHT_QUEENS {
@@ -51,7 +51,7 @@ func populate(row int, positions []int, allSolutions [][]int) ([]int, [][]int) {
 
 		// NOTE: be sure not to return 'tmp' here, as that would overwrite
 		// the caller's slice
-		return positions, allSolutions
+		return allSolutions
 	}
 
 	for j := 0; j < EIGHT_QUEENS; j++ { // iterate over each column
@@ -64,7 +64,7 @@ func populate(row int, positions []int, allSolutions [][]int) ([]int, [][]int) {
 			// Remove it so that we can test other permutations
 			positions = append(positions, j)
 
-			positions, allSolutions = populate(row+1, positions, allSolutions)
+			allSolutions = populate(row+1, positions, allSolutions)
 
 			// remove the current queen
 			positions = positions[:row]
@@ -72,7 +72,7 @@ func populate(row int, positions []int, allSolutions [][]int) ([]int, [][]int) {
 		}
 	}
 
-	return positions, allSolutions
+	return allSolutions
 }
 
 // Given the current row and column, determine if there are any queens
