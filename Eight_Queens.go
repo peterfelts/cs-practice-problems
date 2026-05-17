@@ -24,51 +24,56 @@ const EIGHT_QUEENS int = 8
 func eightQueens() [][]int {
 
 	positions := []int{} // the index will be the row, the value will be the column
+	allSolutions := [][]int{}
 
-	_, positions = populate(0, positions)
+	positions, allSolutions = populate(0, positions, allSolutions)
 
-	printBoard(positions)
+	for i, solution := range allSolutions {
+		fmt.Printf("Found %d solutions. Solution #%d\n", len(allSolutions), i+1)
+		printBoard(solution)
+		fmt.Println()
+	}
 
-	return [][]int{}
+	return allSolutions
 }
 
-func populate(row int, positions []int) (bool, []int) {
+func populate(row int, positions []int, allSolutions [][]int) ([]int, [][]int) {
 
 	// we've reached the end of the board
 	if row == EIGHT_QUEENS {
-		return true, positions
+
+		// if we've reached past the final row, we have a solution
+		// copy the solution into a new slice, otherwise, any changes
+		// we make further back in the stack will influence this memory
+		tmp := make([]int, len(positions))
+		copy(tmp, positions)
+		allSolutions = append(allSolutions, tmp)
+
+		// NOTE: be sure not to return 'tmp' here, as that would overwrite
+		// the caller's slice
+		return positions, allSolutions
 	}
 
-	branchWorks := false
 	for j := 0; j < EIGHT_QUEENS; j++ { // iterate over each column
-
-		branchWorks = false
 
 		// if we can place a queen in this position,
 		// recursiverly call into the next row
 		if canPlace(row, j, positions) {
 
 			// place the queen in the current position temporarily.
-			// Remove it if we can't find a suitable path
+			// Remove it so that we can test other permutations
 			positions = append(positions, j)
 
-			branchWorks, positions = populate(row+1, positions)
-			if branchWorks {
+			positions, allSolutions = populate(row+1, positions, allSolutions)
 
-				// append to the positions
-				positions = append(positions, j)
-				break
-			}
-			// pop
+			// remove the current queen
 			positions = positions[:row]
-		}
 
+		}
 	}
 
-	return branchWorks, positions
+	return positions, allSolutions
 }
-
-// [row, col] = [0,0]
 
 // Given the current row and column, determine if there are any queens
 // present in the same row, column, or diagonals
@@ -77,6 +82,8 @@ func canPlace(row, col int, positions []int) bool {
 	// cycle through all previous positions
 	for i := 0; i < len(positions); i++ {
 		// check row and column
+		// i == row -> there is already a queen in the current row (sholdnt' happen)
+		// positions[i] == col -> there is a queen in the same column
 		if i == row || positions[i] == col {
 			return false
 		}
@@ -92,7 +99,6 @@ func canPlace(row, col int, positions []int) bool {
 		}
 
 		// we've found a queen on the diagonal
-		fmt.Printf("checking diagonal: %d, %d, row, col: (%d,%d)\n", i, positions, row, col)
 		if positions[i] == j {
 			return false
 		}
@@ -104,7 +110,7 @@ func canPlace(row, col int, positions []int) bool {
 	i = row - 1
 	j = col + 1
 	for {
-		if i < 0 || col > EIGHT_QUEENS-1 {
+		if i < 0 || j > EIGHT_QUEENS-1 {
 			break
 		}
 
