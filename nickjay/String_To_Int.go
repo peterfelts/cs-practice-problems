@@ -1,4 +1,4 @@
-package main
+package nickjay
 
 // "123" -> 123
 // assume:
