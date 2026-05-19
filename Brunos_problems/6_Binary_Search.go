@@ -44,7 +44,6 @@ func binarySearch(nums []int, target int) int {
 			// search right
 		} else {
 			l = pivot + 1
-
 		}
 
 	}

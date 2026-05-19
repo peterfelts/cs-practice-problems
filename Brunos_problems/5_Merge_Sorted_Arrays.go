@@ -27,7 +27,7 @@ func mergeSortedArrays(nums1, nums2 []int, m, n int) []int {
 	// We know that each array is already sorted and we know
 	// that we have a lot of empty space after the m-1 index
 	// in the first array. We'll walk the length of that array,
-	// from right to left and we'll whichever value is greater
+	// from right to left and we'll swap whichever value is greater
 	// at index i
 	for i := m + n - 1; i >= 0; i-- {
 

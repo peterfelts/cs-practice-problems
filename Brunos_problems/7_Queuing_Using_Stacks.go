@@ -7,9 +7,9 @@ import "sync"
 // operations: enqueue (push), dequeue (pop), peek, and empty.
 
 type Queue struct {
-	mu     sync.RWMutex // let's make this thread safe, just for un
+	mu     sync.RWMutex // let's make this thread safe, just for fun
 	stackA []int        // the first stack that receives incoming items
-	stackB []int        // the reverse-order statck that outgoing items are popped from
+	stackB []int        // the reverse-order stack that outgoing items are popped from
 }
 
 func InitQueue() *Queue {
@@ -43,7 +43,7 @@ func (q *Queue) Peek() (int, bool) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
-	q.transfer()
+	q.transfer() // bug? what if I enqueue, then peak, then enque... the order could be broken
 	if len(q.stackB) == 0 {
 		return 0, false
 	}
@@ -58,14 +58,17 @@ func (q *Queue) Empty() bool {
 
 func (q *Queue) transfer() {
 
-	// if stack B is empty, copy items from stack A until it is empty
+	// if stack B is empty, copy items from stack A until it is empty.
+	// The reson we check and only do the transfer when B is empty, is becasue
+	// 'transfer' is called on Peek, so if we always did the trasfer, c call to
+	// 'Peek' could result in the ordering becoming invalid.
 	if len(q.stackB) == 0 {
 		for {
 			if len(q.stackA) == 0 {
 				break
 			}
 			item := q.stackA[len(q.stackA)-1]     // get the last item in the first stack
-			q.stackA = q.stackA[:len(q.stackA)-1] // remove the last item in the frist stack
+			q.stackA = q.stackA[:len(q.stackA)-1] // remove the last item in the first stack
 			q.stackB = append(q.stackB, item)     // put the item into the second stack
 		}
 	}

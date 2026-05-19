@@ -5,7 +5,9 @@ import (
 )
 
 /*
-Consider two arrays: one representing a paragraph, and one representing a list of keywords. For a given paragraph and keyword list, determine the smallest subarray of the paragraph which covers all of the keywords. The keywords’ order of appearance must match. Keywords may or may not be separated by other words.
+Consider two arrays: one representing a paragraph, and one representing a list of keywords. For a given paragraph and keyword list,
+determine the smallest subarray of the paragraph which covers all of the keywords. The keywords’ order of appearance must match.
+Keywords may or may not be separated by other words.
 
 Paragraph
 
