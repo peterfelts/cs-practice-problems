@@ -71,5 +71,7 @@ func twoSums(nums []int, target int) [2]int {
 
 	}
 
+	// TODO: sort the 'out' indicies by their original order
+
 	return out
 }

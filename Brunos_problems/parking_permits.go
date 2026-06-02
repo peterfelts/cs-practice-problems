@@ -6,13 +6,16 @@ import (
 )
 
 /*
-Imagine you're managing a parking lot with N parking spaces, each uniquely numbered from 1 to N. Due to a clerical error, you end up issuing N+1 parking permits, each assigned to a parking space number between 1 and N. Since there are more permits than spaces, at least one parking space number must have been assigned to more than one permit. There might even be multiple parking spaces that have duplicate assignments. For example:
+	Imagine you're managing a parking lot with N parking spaces, each uniquely numbered from 1 to N. Due to a clerical error,
+	you end up issuing N+1 parking permits, each assigned to a parking space number between 1 and N. Since there are more
+	permits than spaces, at least one parking space number must have been assigned to more than one permit. There might
+	even be multiple parking spaces that have duplicate assignments. For example:
 
-If N = 3, the issued permits might list parking spaces [3, 1, 1, 3], meaning both parking spaces 1 and 3 have been assigned more than one permit.
-Alternatively, the permits could be [1, 3, 2, 2], indicating that parking space 2 is assigned to multiple permits.
+	If N = 3, the issued permits might list parking spaces [3, 1, 1, 3], meaning both parking spaces 1 and 3 have been
+	assigned more than one permit.
+	Alternatively, the permits could be [1, 3, 2, 2], indicating that parking space 2 is assigned to multiple permits.
 
-Your task is to identify any one parking space number that has been assigned more than once.
-
+	Your task is to identify any one parking space number that has been assigned more than once.
 */
 
 func findDuplicatePermits(inArray []int) int {

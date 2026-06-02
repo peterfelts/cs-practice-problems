@@ -32,6 +32,8 @@ func firstNonRepeatingCharacter(s string) int {
 		}
 	}
 
+	// TODO: replace this wit a min heap
+
 	// Walk map and keep track of entries we find that
 	// have the lowest index and have a count equal to 1
 	lowestIndex := len(s)
