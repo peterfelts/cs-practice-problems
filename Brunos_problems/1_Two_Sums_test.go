@@ -57,14 +57,26 @@ func TestTwoSums(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result := twoSums(tc.nums, tc.target)
-			matchesEitherOrder := (result == tc.expected) ||
-				(result == [2]int{tc.expected[1], tc.expected[0]})
-			require.True(t, matchesEitherOrder,
-				"expected indices {%d, %d} in any order, got {%d, %d}",
-				tc.expected[0], tc.expected[1], result[0], result[1])
+	implementations := []struct {
+		name string
+		run  func([]int, int) [2]int
+	}{
+		{name: "twoSums", run: twoSums},
+		{name: "twoSumsMap", run: twoSumsMap},
+	}
+
+	for _, implementation := range implementations {
+		t.Run(implementation.name, func(t *testing.T) {
+			for _, tc := range testCases {
+				t.Run(tc.name, func(t *testing.T) {
+					result := implementation.run(tc.nums, tc.target)
+					matchesEitherOrder := (result == tc.expected) ||
+						(result == [2]int{tc.expected[1], tc.expected[0]})
+					require.True(t, matchesEitherOrder,
+						"expected indices {%d, %d} in any order, got {%d, %d}",
+						tc.expected[0], tc.expected[1], result[0], result[1])
+				})
+			}
 		})
 	}
 }

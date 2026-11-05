@@ -1,6 +1,7 @@
 package bruno
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -72,6 +73,45 @@ func twoSums(nums []int, target int) [2]int {
 	}
 
 	// TODO: sort the 'out' indicies by their original order
+
+	return out
+}
+
+// Create a map of each value and index
+// Iterate over the original array. At each index, see if the following equation works:
+// does the map contain the value that we need (the compliment of the current number) that would
+// get us to the target?
+//
+// Something like:
+//
+//	if (target - current value exists in map as key)
+//	   then: return current index and index at key
+func twoSumsMap(nums []int, target int) [2]int {
+
+	// output array
+	out := [2]int{-1, -1}
+
+	// map used to store indices by value
+	m := make(map[int]int)
+
+	// populate map
+	for i := 0; i < len(nums); i++ {
+		m[nums[i]] = i
+	}
+
+	fmt.Println(nums)
+	fmt.Println(m)
+
+	// find indices
+	for i := 0; i < len(nums); i++ {
+		idealValue := target - nums[i]
+		index, ok := m[idealValue]
+		if ok && index != i {
+			out[0] = i
+			out[1] = index
+			return out
+		}
+	}
 
 	return out
 }
