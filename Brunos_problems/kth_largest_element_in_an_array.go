@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"math/rand"
 	"sort"
+
+	"github.com/peterfelts/cs-practice-problems/Brunos_problems/shared"
 )
 
 func returnKthLargestBruteForce(values []int, kth int) int {
@@ -36,7 +38,11 @@ func returnKthLargestBruteForce(values []int, kth int) int {
 
 func returnKthLargestHeap(values []int, k int) int {
 
-	h := &MinHeap{}
+	h := &shared.MinHeap[int]{
+		Compare: func(a, b int) bool {
+			return a < b
+		},
+	}
 	heap.Init(h)
 
 	// iterate through the input array and add all items to the heap
@@ -47,12 +53,12 @@ func returnKthLargestHeap(values []int, k int) int {
 		// slice to a set max, so that we'll
 		// always have the k-th largest item
 		// at the front
-		if len(*h) > k {
+		if len(h.Items) > k {
 			heap.Pop(h)
 		}
 	}
 
-	return (*h)[0]
+	return h.Items[0]
 }
 
 func returnKthLargestQuickSelect(values []int, k int) int {

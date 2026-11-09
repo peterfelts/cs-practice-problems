@@ -41,3 +41,15 @@ func Test_firstNonRepeatingCharacter(t *testing.T) {
 		assert.Equal(t, testCase.expected, actual)
 	}
 }
+
+func Test_firstNonRepeatingCharacterMinHeap(t *testing.T) {
+
+	// TODO: target not implemented
+	t.Skip("Min Heap version not implemented yet")
+
+	for _, testCase := range testCasesFirstNonRepeating {
+		actual := firstNonRepeatingCharacterMinHeap(testCase.s)
+
+		assert.Equal(t, testCase.expected, actual)
+	}
+}

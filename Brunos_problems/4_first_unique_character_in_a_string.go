@@ -1,5 +1,11 @@
 package bruno
 
+import (
+	"container/heap"
+
+	"github.com/peterfelts/cs-practice-problems/Brunos_problems/shared"
+)
+
 // Problem: Given a string s, find the first non-repeating character in it and return its index.
 // If it does not exist, return -1.
 
@@ -47,4 +53,18 @@ func firstNonRepeatingCharacter(s string) int {
 		return -1
 	}
 	return lowestIndex
+}
+
+// type used to store an index and char mapping in a min heap
+type entry struct {
+	index int
+	char  rune
+}
+
+func firstNonRepeatingCharacterMinHeap(s string) int {
+
+	h := &shared.MinHeap[entry]{}
+	heap.Init(h)
+
+	return -1
 }
