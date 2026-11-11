@@ -69,8 +69,8 @@ func findMinRotatedApproachTwo(arr []int) int {
 
 		m := left + (right-left)/2
 
-		// is the value at the mid point <= the value at the end of the input array.
-		// If so, look to the left, otherwise, look right
+		// If the value at the mid point <= the value at the end of the input
+		// array, look to the left, otherwise, look right
 		if arr[m] <= arr[len(arr)-1] {
 			candidate = m
 			right = m - 1
