@@ -46,7 +46,7 @@ func newspapersSplit(newspapersReadTimes []int, numCoworkers int) int {
 	//
 	// 1) choose a target read-time value to test (say... 17 minutes)
 	// 2) start at the beginning of the array, sum up read times
-	// 3) If adding the N+1 item to the sume would excreed the target read
+	// 3) If adding the N+1 item to the sum would exceed the target read
 	//    time, add that item to the next reader.
 	// 4) If you exceed the provided number of readers, that tells us that
 	//    our target read time is too low, then we increase it. If we can
